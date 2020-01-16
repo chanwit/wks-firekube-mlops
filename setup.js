@@ -40,9 +40,9 @@ const footloose = config => ({
       name: 'node%d',
       backend: config.backend,
       ignite: {
-        cpus: 2,
-        memory: '1GB',
-        diskSize: '5GB',
+        cpus: 4,
+        memory: '12GB',
+        diskSize: '40GB',
         kernel: 'weaveworks/ignite-kernel:4.19.47',
       },
       portMappings: [{
