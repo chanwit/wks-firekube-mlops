@@ -22,7 +22,7 @@ set -euo pipefail
 JK_VERSION=0.3.0
 FOOTLOOSE_VERSION=0.6.2
 IGNITE_VERSION=0.5.5
-WKSCTL_VERSION=0.8.1
+WKSCTL_VERSION=0.8.2-alpha.2
 
 config_backend() {
     sed -n -e 's/^backend: *\(.*\)/\1/p' config.yaml
