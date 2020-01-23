@@ -31,7 +31,7 @@ spec:
     spec:
       initContainers:
       - name: model-container
-        image: chanwit/titanic-model:v2
+        image: chanwit/titanic-model:v1
         args:
         - /model.joblib
         - /models/model.joblib
