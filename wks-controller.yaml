@@ -47,7 +47,7 @@ spec:
           value: 172.17.0.1
         - name: FOOTLOOSE_BACKEND
           value: docker
-        image: quay.io/wksctl/controller:0.8.2-alpha.1
+        image: quay.io/wksctl/controller:0.8.2-alpha.2
         command:
         - /bin/controller
         - --verbose
