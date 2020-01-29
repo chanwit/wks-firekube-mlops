@@ -41,7 +41,7 @@ const footloose = config => ({
       count: 1,
       spec: {
         image: registryImage(config),
-        node: 'registry%d',
+        name: 'registry%d',
         backend: config.backend,
         ignite: {
           cpus: 1,
