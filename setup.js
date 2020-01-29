@@ -27,7 +27,7 @@ const backend = {
 };
 
 const image = config => backend[config.backend].image;
-const registry = config => backend[config.backend].registryImage;
+const registryImage = config => backend[config.backend].registryImage;
 const privileged = config => backend[config.backend].privileged;
 const volumes = config => backend[config.backend].volumes;
 
