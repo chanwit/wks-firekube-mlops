@@ -11,7 +11,7 @@ machines:
       kernel: weaveworks/ignite-kernel:4.19.47
       memory: 2GB
     image: chanwit/footloose-registry:2
-    node: registry%d
+    name: registry%d
     portMappings:
     - containerPort: 22
       hostPort: 2222
