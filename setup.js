@@ -9,6 +9,7 @@ const numNodes = config => config.controlPlane.nodes + config.workers.nodes;
 const backend = {
   docker: {
     image: 'quay.io/footloose/centos7:0.6.0',
+    registryImage: 'chanwit/footloose-registry:2',
     // The below is required for dockerd to run smoothly.
     // See also: https://github.com/weaveworks/footloose#running-dockerd-in-container-machines
     privileged: true,
@@ -19,12 +20,14 @@ const backend = {
   },
   ignite: {
     image: 'weaveworks/ignite-centos:firekube-pre3',
+    registryImage: 'chanwit/ignite-registry:2',
     privileged: false,
     volumes: [],
   },
 };
 
 const image = config => backend[config.backend].image;
+const registry = config => backend[config.backend].registryImage;
 const privileged = config => backend[config.backend].privileged;
 const volumes = config => backend[config.backend].volumes;
 
@@ -33,35 +36,60 @@ const footloose = config => ({
     name: 'firekube',
     privateKey: 'cluster-key',
   },
-  machines: [{
-    count: numNodes(config),
-    spec: {
-      image: image(config),
-      name: 'node%d',
-      backend: config.backend,
-      ignite: {
-        cpus: 4,
-        memory: '12GB',
-        diskSize: '40GB',
-        kernel: 'weaveworks/ignite-kernel:4.19.47',
-      },
-      portMappings: [{
-        containerPort: 22,
-        hostPort: 2222,
-      }, {
-        containerPort: 6443,
-        hostPort: 6443,
-      }, {
-        containerPort: 30443,
-        hostPort: 30443,
-      }, {
-        containerPort: 30080,
-        hostPort: 30080,
-      }],
-      privileged: privileged(config),
-      volumes: volumes(config),
+  machines: [
+    {
+      count: 1,
+      spec: {
+        image: registryImage(config),
+        node: 'registry%d',
+        backend: config.backend,
+        ignite: {
+          cpus: 1,
+          memory: '2GB',
+          diskSize: '40GB',
+          kernel: 'weaveworks/ignite-kernel:4.19.47',
+        },
+        portMappings: [{
+          containerPort: 22,
+          hostPort: 2222,
+        }, {
+          containerPort: 5000,
+          hostPort: 5000,
+        }],
+        privileged: privileged(config),
+        volumes: volumes(config),
+      }
     },
-  }],
+    {
+      count: numNodes(config),
+      spec: {
+        image: image(config),
+        name: 'node%d',
+        backend: config.backend,
+        ignite: {
+          cpus: 4,
+          memory: '12GB',
+          diskSize: '40GB',
+          kernel: 'weaveworks/ignite-kernel:4.19.47',
+        },
+        portMappings: [{
+          containerPort: 22,
+          hostPort: 2222,
+        }, {
+          containerPort: 6443,
+          hostPort: 6443,
+        }, {
+          containerPort: 30443,
+          hostPort: 30443,
+        }, {
+          containerPort: 30080,
+          hostPort: 30080,
+        }],
+        privileged: privileged(config),
+        volumes: volumes(config),
+      },
+    }
+  ],
 });
 
 output.push({ path: 'footloose.yaml', value: footloose(config) });
