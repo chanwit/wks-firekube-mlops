@@ -195,7 +195,8 @@ if (config.machines !== undefined) {
                 key: 'docker-ce.repo'
               },
               destination: '/etc/yum.repos.d/docker-ce.repo'
-            },{
+            },
+            {
               source: {
                 configmap: 'docker',
                 key: 'daemon.json'
