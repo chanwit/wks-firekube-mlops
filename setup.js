@@ -37,30 +37,7 @@ const footloose = config => ({
     privateKey: 'cluster-key',
   },
   machines: [
-    {
-      count: 1,
-      spec: {
-        image: registryImage(config),
-        name: 'registry%d',
-        backend: config.backend,
-        ignite: {
-          cpus: 1,
-          memory: '2GB',
-          diskSize: '40GB',
-          kernel: 'weaveworks/ignite-kernel:4.19.47',
-        },
-        portMappings: [{
-          containerPort: 22,
-          hostPort: 2222,
-        }, {
-          containerPort: 5000,
-          hostPort: 5000,
-        }],
-        privileged: privileged(config),
-        volumes: volumes(config),
-      }
-    },
-    {
+   {
       count: numNodes(config),
       spec: {
         image: image(config),
@@ -88,6 +65,29 @@ const footloose = config => ({
         privileged: privileged(config),
         volumes: volumes(config),
       },
+    },
+    {
+      count: 1,
+      spec: {
+        image: registryImage(config),
+        name: 'registry%d',
+        backend: config.backend,
+        ignite: {
+          cpus: 1,
+          memory: '2GB',
+          diskSize: '40GB',
+          kernel: 'weaveworks/ignite-kernel:4.19.47',
+        },
+        portMappings: [{
+          containerPort: 22,
+          hostPort: 2222,
+        }, {
+          containerPort: 5000,
+          hostPort: 5000,
+        }],
+        privileged: privileged(config),
+        volumes: volumes(config),
+      }
     }
   ],
 });
