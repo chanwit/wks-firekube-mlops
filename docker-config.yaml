@@ -6,6 +6,7 @@ metadata:
 data:
   daemon.json: |
     {
+      "insecure-registries" : ["127.0.0.1:5000", "172.17.0.1:5000"]
       "log-driver": "json-file",
       "log-opts": {
         "max-size": "100m"
