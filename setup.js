@@ -156,6 +156,65 @@ if (config.machines !== undefined) {
   }
 
   output.push({ path: 'machines.yaml', value: List(machines) });
+
+  const registry = config.machines[config.machines.length - 1];
+  const cluster = config => ({
+    apiVersion: 'cluster.k8s.io/v1alpha1',
+    kind: 'Cluster',
+    metadata: {
+      name: 'example'
+    },
+    spec: {
+      clusterNetwork: {
+        services: {
+          cidrBlocks: ['10.96.0.0/12']
+        },
+        pods: {
+          cidrBlocks: ['192.168.0.0/16']
+        },
+        serviceDomain: 'cluster.local'
+      },
+      providerSpec: {
+        value: {
+          apiVersion: 'baremetalproviderspec/v1alpha1',
+          kind: 'BareMetalClusterProviderSpec',
+          user: 'root',
+          imageRepository: registry.runtimeNetworks[0].ip + ':5000',
+          os: {
+            files:[
+            {
+              source: {
+                configmap: 'repo',
+                key: 'kubernetes.repo'
+              },
+              destination: '/etc/yum.repos.d/kubernetes.repo'
+            },
+            {
+              source: {
+                configmap: 'repo',
+                key: 'docker-ce.repo'
+              },
+              destination: '/etc/yum.repos.d/docker-ce.repo'
+            },{
+              source: {
+                configmap: 'docker',
+                key: 'daemon.json'
+              },
+              destination: '/etc/docker/daemon.json'
+            }]
+          },
+          cri: {
+            kind: 'docker',
+            package: 'docker-ce',
+            version: '18.09.7'
+          }
+        }
+      }
+    }
+  });
+
+  output.push({ path: 'cluster.yaml', value: cluster(config) });
+
 }
 
 export default output;
