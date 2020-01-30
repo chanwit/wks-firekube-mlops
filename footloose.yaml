@@ -2,25 +2,6 @@ cluster:
   name: firekube
   privateKey: cluster-key
 machines:
-- count: 1
-  spec:
-    backend: docker
-    ignite:
-      cpus: 1
-      diskSize: 40GB
-      kernel: weaveworks/ignite-kernel:4.19.47
-      memory: 2GB
-    image: chanwit/footloose-registry:2
-    name: registry%d
-    portMappings:
-    - containerPort: 22
-      hostPort: 2222
-    - containerPort: 5000
-      hostPort: 5000
-    privileged: true
-    volumes:
-    - destination: /var/lib/docker
-      type: volume
 - count: 2
   spec:
     backend: docker
@@ -40,6 +21,25 @@ machines:
       hostPort: 30443
     - containerPort: 30080
       hostPort: 30080
+    privileged: true
+    volumes:
+    - destination: /var/lib/docker
+      type: volume
+- count: 1
+  spec:
+    backend: docker
+    ignite:
+      cpus: 1
+      diskSize: 40GB
+      kernel: weaveworks/ignite-kernel:4.19.47
+      memory: 2GB
+    image: chanwit/footloose-registry:2
+    name: registry%d
+    portMappings:
+    - containerPort: 22
+      hostPort: 2222
+    - containerPort: 5000
+      hostPort: 5000
     privileged: true
     volumes:
     - destination: /var/lib/docker
